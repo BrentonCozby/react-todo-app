@@ -17,12 +17,10 @@ export default class TodosList extends React.Component {
 
     render() {
         return (
-            // <div className="table-responsive">
-                <table className="table">
-                    <TodosListHeader />
-                    <tbody>{this.renderItems()}</tbody>
-                </table>
-            // </div>
+            <table className="table">
+                <TodosListHeader />
+                <tbody>{this.renderItems()}</tbody>
+            </table>
         );
     }
 }

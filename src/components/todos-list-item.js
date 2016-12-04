@@ -12,17 +12,17 @@ export default class TodosListItem extends React.Component {
     renderActionsSection() {
         if(this.state.isEditing) {
             return (
-                <td>
-                    <button className="btn btn-default"><span className="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-                    <button className="btn btn-default" onClick={this.onCancelClick.bind(this)}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <td className="taskButtonsCell">
+                    <button className="btn btn-default btn-sm" onClick={this.onSaveClick.bind(this)}><span className="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                    <button className="btn btn-default btn-sm" onClick={this.onCancelClick.bind(this)}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                 </td>
             );
         }
 
         return (
-            <td>
-                <button className="btn btn-default" onClick={this.onEditClick.bind(this)}><span className="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
-                <button className="btn btn-default"><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+            <td className="taskButtonsCell">
+                <button className="btn btn-default btn-sm" onClick={this.onEditClick.bind(this)}><span className="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+                <button className="btn btn-default btn-sm" onClick={this.props.deleteTask.bind(this, this.props.task)}><span className="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
             </td>
         );
     }
@@ -34,6 +34,16 @@ export default class TodosListItem extends React.Component {
             cursor: 'pointer',
             color: isCompleted ? '#bbb' : '#000'
         };
+
+        if(this.state.isEditing) {
+            return (
+                <td>
+                    <form onSubmit={this.onSaveClick.bind(this)}>
+                        <input className="form-control" type="text" defaultValue={task} ref="editInput" />
+                    </form>
+                </td>
+            );
+        }
 
         return (
             <td style={taskStyle} onClick={this.props.toggleTask.bind(this, task)}>{task}</td>
@@ -54,6 +64,16 @@ export default class TodosListItem extends React.Component {
     }
 
     onCancelClick() {
+        this.setState({ isEditing: false });
+    }
+
+    onSaveClick(event) {
+        event.preventDefault();
+
+        const oldTask = this.props.task;
+        const newTask = this.refs.editInput.value;
+
+        this.props.saveTask(oldTask, newTask);
         this.setState({ isEditing: false });
     }
 }
